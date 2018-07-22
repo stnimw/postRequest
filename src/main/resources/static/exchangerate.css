@@ -1,0 +1,41 @@
+.mid {
+	text-align: center;
+	margin-bottom: 50px;
+	width: 850px;
+}
+
+.left {
+	margin-bottom: 20px;
+	margin-left: 20px;
+}
+
+#button:hover {
+	background-position: left -165px;
+	padding: 8px 10px 7px 13px;
+	padding: 9px 10px 6px 13px\9;
+}
+
+#button:hover:after {
+	background-position: right -165px;
+	padding: 7px 10px 8px 13px;
+	padding: 8px 10px 7px 13px\9;
+}
+
+#button {
+	margin: 0px auto;
+	background-color: #009d99;
+	color: #FFF;
+	/*min-width: 57px;*/
+	padding: 7px 10px 8px 13px;
+	padding: 8px 10px 7px 13px\9;
+	font-size: 15px;
+}
+
+#canvas_div {
+	width: 850px;
+	height: 400px;
+}
+
+input[type="radio"]:checked:before {
+	background: red;
+}

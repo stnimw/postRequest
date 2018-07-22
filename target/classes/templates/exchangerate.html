@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<script
+	src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script
+	src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/exchangerate.css}">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>匯率查詢</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class='left'>
+		幣別： <select name='currency'>
+			<option value='CNY' selected>人民幣(CNY)</option>
+			<option value='USD'>美元(USD)</option>
+			<option value='AUD'>澳幣(AUD)</option>
+			<option value='EUR'>歐元(EUR)</option>
+			<option value='HKD'>港幣(HKD)</option>
+		</select>
+	</div>
+	<div class='left'>
+		<div>
+			查詢期間： <input type="radio" name="rangeType" value='0' checked>
+			當天 <input type="radio" name="rangeType" value='1'> 3個月 <input
+				type="radio" name="rangeType" value='2'> 6個月 <input
+				type="radio" name="rangeType" value='3'> 1年
+		</div>
+	</div>
+	<div class='mid'>
+        <button id="button" onclick="update()">開始查詢</button>
+    </div>
+ 
+	<div id='canvas_div'>
+		<canvas id="lineChart"></canvas>
+	</div>
+	<script th:inline="javascript">
+ 		// 時間資料
+		var yAxis = [[${data.timeList}]];
+		// 匯率資料
+		var buyDatas = [[${data.buyRateList}]];
+		var sellDatas = [[${data.sellRateList}]]; 
+		var defaultString = '人民幣'; 
+		
+		var ctx = document.getElementById('lineChart');
+		var myChart = new Chart(ctx,{
+			type : 'line',
+			data : {
+				labels : yAxis,
+				datasets : [ {
+					label : '賣匯',
+					data : buyDatas,
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(124,181,236,1)",
+                    borderWidth: 2,
+                    pointRadius:0,//不呈現point
+                    pointHitRadius: 3//hover時呈現point
+				},
+				{
+					label : '買匯',
+					data : sellDatas,
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderColor: "rgba(247,163,92,1)",
+                    borderWidth: 2,
+                    pointRadius:0,//不呈現point
+                    pointHitRadius: 3//hover時呈現point
+				},  ]
+			},
+			options : {
+				legend: {
+	                position: 'bottom',
+	                labels: {
+	                    boxWidth: 40
+	                }
+	            },
+				title: {
+	                display: true,
+	                text: defaultString + '匯率',
+	                fontSize: 20,
+	                fontColor: '#000'
+	            },
+				scales : {
+					xAxes : [ {
+						gridLines : {
+							color : 'rgba(171,171,171,0.5)',
+						},
+                        type: 'time',
+                        time:{
+                            unit: 'hour',
+                            displayFormats:{
+                                month: 'YYYY MMM',
+                                day: 'MMM D',
+                                hour: 'h:mm'
+                            }
+                        },
+					} ],
+					yAxes : [ {
+						gridLines : {
+							color : 'rgba(0,0,0,0)'
+						},
+                        scaleLabel: {
+                            display: true,
+                            labelString: defaultString + '即期'
+                        }
+					} ]
+				},
+			}
+		});
+		function update(){
+			var formData = {
+					currency : $("select[name='currency']").val(),
+					rangeType : $("input[name = 'rangeType']:checked").val()
+		    	}
+			$.ajax({
+				type : 'POST',
+				url : /*[[@{/update}]]*/ 'test',
+				data: JSON.stringify(formData),
+				dataType : 'json',
+				contentType : "application/json; charset=utf-8",
+				async : false,
+				success : function(result){
+					ajaxReturn(result);
+				},
+				error : function(result) {
+					console.log(result.reponse);
+				}
+			});
+		} 
+		
+		function ajaxReturn(result){
+			var rangeType = $("input[name = 'rangeType']:checked").val();
+			var currencyCode= $("select[name='currency'] :selected").val(); 
+	        var currencyString= $("select[name='currency'] :selected").text(); 
+	        var currencyStr = currencyString.substring(0, currencyString.indexOf('('));
+			myChart.data.labels = result.timeList;
+			myChart.data.datasets[0].data= result.sellRateList;
+			myChart.data.datasets[1].data= result.buyRateList;
+			myChart.options.scales.yAxes[0].scaleLabel.labelString = currencyStr + '即期';
+			myChart.options.title.text = currencyStr + '匯率';
+			if (rangeType == '0') {
+	            myChart.options.scales.xAxes[0].time.unit = 'hour';
+	            myChart.options.scales.xAxes[0].time.stepSize = 1;
+	            myChart.options.scales.xAxes[0].time.min ='';
+	            myChart.options.scales.xAxes[0].time.max ='';
+	        } else{
+	            myChart.options.scales.xAxes[0].time.unit = 'month';
+	            myChart.options.scales.xAxes[0].time.stepSize = 1;
+	            myChart.options.scales.xAxes[0].time.min =result.startDate;
+	            myChart.options.scales.xAxes[0].time.max =result.endDate;
+	        }
+			myChart.update();
+		}
+	</script>
+</body>
+</html>

@@ -12,6 +12,8 @@ Create a currency exchange rate graph.
 3. Create a line chart with Chart.js.
 4. Update line chart when users change the parameters.
 
+web site: 
+https://www.esunbank.com.tw/bank/personal/deposit/rate/forex/exchange-rate-chart?Currency=USD/TWD
 ## Requirements
 
 This demo is build with with Maven 3.5.3 and Java 1.8.
@@ -22,32 +24,3 @@ This demo is build with with Maven 3.5.3 and Java 1.8.
 2. Run as Spring Boot App.
 3. Open *http://localhost:8080/* in the browser.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-https://www.esunbank.com.tw/bank/personal/deposit/rate/forex/exchange-rate-chart?Currency=USD/TWD
-
-## Requirements
-
-This demo is build with with Maven 3.5.4 and Java 1.7.

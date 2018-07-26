@@ -4,11 +4,11 @@ import java.util.List;
 
 public class ChartVO {
 
-	List<Double> buyRateList;
-	List<Double> sellRateList;
-	List<String> timeList;
-	String startDate;
-	String endDate;
+	private List<Double> buyRateList;
+	private List<Double> sellRateList;
+	private List<String> timeList;
+	private String startDate;
+	private String endDate;
 
 	public List<Double> getBuyRateList() {
 		return buyRateList;

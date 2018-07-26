@@ -1,8 +1,8 @@
 package com.sandy.rate.vo;
 
 public class TimePeriod {
-	String startDate;
-	String endDate;
+	private String startDate;
+	private String endDate;
 	public String getStartDate() {
 		return startDate;
 	}

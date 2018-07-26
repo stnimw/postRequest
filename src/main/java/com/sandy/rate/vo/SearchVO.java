@@ -1,8 +1,8 @@
 package com.sandy.rate.vo;
 
 public class SearchVO {
-	String currency;
-	String rangeType;
+	private String currency;
+	private String rangeType;
 
 	public String getCurrency() {
 		return currency;
